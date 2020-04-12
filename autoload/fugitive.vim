@@ -5979,6 +5979,7 @@ function! fugitive#BlameSyntax() abort
   call s:BlameHighlightDates()
 
   let seen = {}
+  let dates = {}
   for lnum in range(1, line('$'))
     let orig_hash = matchstr(getline(lnum), '^\^\=[*?]*\zs\x\{6\}')
     let hash = orig_hash
@@ -5997,7 +5998,10 @@ function! fugitive#BlameSyntax() abort
     if exists('age') && exists('*log')
       let staleness = age < 0 ? 0 : float2nr(ceil(log(1+age/86400)))
       if staleness > 15 | let staleness = 15 | endif
-      exe 'syn match FugitiveblameTime'.staleness.' " \<'.match[0].'\>" contained containedin=FugitiveblameAnnotation'
+      if !has_key(dates, match[0])
+        exe 'syn match FugitiveblameTime'.staleness.' " \<'.match[0].'\>" contained containedin=FugitiveblameAnnotation'
+        let dates[match[0]] = 1
+      endif
     endif
 
     if hash ==# '' || orig_hash ==# '000000' || has_key(seen, hash)
