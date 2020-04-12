@@ -5997,7 +5997,7 @@ function! fugitive#BlameSyntax() abort
     if exists('age') && exists('*log')
       let staleness = age < 0 ? 0 : float2nr(ceil(log(1+age/86400)))
       if staleness > 15 | let staleness = 15 | endif
-      exe 'syn match FugitiveblameTime'.staleness.' "\<'.match[0].'\>" contained containedin=FugitiveblameAnnotation'
+      exe 'syn match FugitiveblameTime'.staleness.' " \<'.match[0].'\>" contained containedin=FugitiveblameAnnotation'
     endif
 
     if hash ==# '' || orig_hash ==# '000000' || has_key(seen, hash)
